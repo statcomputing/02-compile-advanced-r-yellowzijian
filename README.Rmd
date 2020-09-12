@@ -1,0 +1,90 @@
+---
+title: "Compiling Advanced R Programming"
+author: "Zijian Huang"
+date: "9/12/2020"
+output: pdf_document
+---
+
+# Introduction 
+
+Use git to clone the source of Hadley Wickham’s Advanced R Programming from his GitHub repository to a local space on your own computer. Build the book using RStudio. During the building process, you may see error messages due to missing tools on your computer. Read the error messages carefully and fix them, until you get the book built. You may need to install some R packages, some fonts, some latex packages, and some building tools for R packages. On Windows, some codes for parallel computing may not work and need to be swapped out. Document the problems you encountered and how you solved them in an R Markdown file named README.Rmd. Push it to your homework GitHub repository so that it can help other students to build the book.
+
+
+# Issue and Solution 
+
+Firstly, update R to the latest version 4.0.2.Then, install the following packages.
+
+```{r message = FALSE, warning = FALSE, results="hide"}
+## Install all the packages needed
+install.packages("bookdown", repos = 'http://cran.us.r-project.org')
+install.packages("desc", repos = 'http://cran.us.r-project.org')
+install.packages("sessioninfo", repos = 'http://cran.us.r-project.org')
+install.packages("lobstr", repos = 'http://cran.us.r-project.org')
+install.packages("RSQLite", repos = 'http://cran.us.r-project.org')
+install.packages("profvis", repos = 'http://cran.us.r-project.org')
+install.packages("bench", repos = 'http://cran.us.r-project.org')
+install.packages("ggbeeswarm", repos = 'http://cran.us.r-project.org')
+install.packages("extrafont", repos = 'http://cran.us.r-project.org')
+```
+
+
+The devtools package not only facilitates the process to develop R packages but also provides another way to distribute R packages. The devtools package provides install_github() that enables installing packages from GitHub. Therefore, I install the package from Hadley Wickham’s github repo.
+
+```{r message = FALSE, warning = FALSE, results="hide"}
+# These functions are re-exported from the github package. 
+# Check error messages for needed cran packages. 
+# Development packages are mentioned below.
+devtools::install_github("hadley/r4ds")
+devtools::install_github("wch/webshot")
+devtools::install_github("hadley/sloop")
+devtools::install_github("hadley/emo")
+```
+
+
+After that, I run the code `bookdown::render_book("index.Rmd", output_format = "bookdown::pdf_book")` in order to compile the pdf version of the book. However, I met the first error message.
+
+> Error: pandoc document conversion failed with error 2
+
+Then, I follow the instruction below. Run the code in my terminal in order to get rid of the error problem.
+
+```{r out.width="90%",echo=FALSE}
+knitr::include_graphics("Install Pandoc.png")
+```
+
+But, there are still some error pop up.
+
+> LaTeX Error: File `framed.sty' not found
+
+So, I follow the instruction below. Run the code in my terminal in order framed package.
+
+```{r out.width="90%",echo=FALSE}
+knitr::include_graphics("Frame.png")
+```
+
+But, the similar error message still pop up. I used tinytex::uninstall_tinytex() and then tinytex::install_tinytex() and it seems the TinyTex is now installed into /Users/zijian/Library/TinyTex. TinyTeX only provides an installation script that downloads and installs TeX Live over the network. It may take a couple of minutes, depending on your network speed. Currently TinyTeX works best for R users. I execute the tlmgr command to update packages.
+
+> LaTeX Error: File `framed.sty' not found
+
+```{r message = FALSE, warning = FALSE, results="hide"}
+library(tinytex)
+tlmgr_update() 
+```
+
+
+```{r message = FALSE, warning = FALSE, results="hide"}
+setwd("~/Downloads/adv-r-master")
+devtools::install_github('rstudio/rmarkdown')
+devtools::install_github(c('yihui/knitr', 'rstudio/flexdashboard'))
+## Install the font needed
+extrafont::font_import(pattern = "Inconsolata")
+bookdown::render_book("index.Rmd", output_format = "bookdown::pdf_book")
+```
+
+
+  
+  
+
+
+
+
+
